@@ -1,5 +1,5 @@
 html {
-	font-size:10px;
+	font-size:12px;
 	line-height:1.1;
 }
 
@@ -45,8 +45,8 @@ body {
 
 
 .mat {
-	perspective:2000px;
-	perspective-origin:80px 80px;
+	perspective:270rem;
+	perspective-origin:8rem 8rem;
 	position:relative;
 }
 
@@ -58,16 +58,15 @@ table {
 .rot,
 thead,
 tbody th {			
-	animation-duration:1000ms;
+	animation-duration:900ms;
 	animation-timing-function:ease-out;
-	/* animation-delay: 1s; */
 	animation-fill-mode: forwards;
 }
 
 .rot {
 	position:relative;
 	transform-style:preserve-3d;
-	transform-origin:80px 80px;	
+	transform-origin:8rem 8rem;	
 }
 
 .mat-next {
@@ -76,33 +75,36 @@ tbody th {
 	left:0;
 	display:none;
 	transform-style:preserve-3d;
-	transform-origin:80px 80px;	
+	transform-origin:8rem 8rem;	
 }
 
 
 
 th, td {
 	box-sizing:border-box;
+	-webkit-user-select:none;
 }
 
-tbody th, td {
-	height:30px;
+thead > tr > th > b,
+tbody th, 
+td {
+	height:3rem;
 }
 
 thead > tr > th, td {
-	width:30px;
+	width:3rem;
 }
 
 tbody th,
 thead > tr > th > b,
 thead > tr > th:first-child {
-	width:80px;
+	width:8rem;
 }
 
 thead > tr > th {
 	border-left:1px solid transparent;
 	border-right:1px solid transparent;
-	height:80px;
+	height:8rem;
 	vertical-align:bottom;
 	position:relative;
 }
@@ -112,9 +114,12 @@ thead > tr > th:first-child {
 }
 
 thead > tr > th > b {
+	display:flex; 
+	justify-content:flex-start;
+	align-items:center;
 	position:absolute;
 	left:50%;
-	bottom:0;
+	bottom:-0.75rem;
 	text-align:left;
 	transform:rotate(-90deg);
 	transform-origin:left center;
@@ -124,13 +129,35 @@ tbody th {
 	border-top:1px solid transparent;
 	border-bottom:1px solid transparent;
 	text-align:right;
-	padding-right:8px;
+	padding-right:0.75rem;
 }
 
 td {
+	position:relative;
 	text-align:center;
 	vertical-align:middle;
 	border:1px solid white;
+}
+
+
+thead th:hover,
+thead th.hovering,
+tbody > tr:hover th {
+	color:red;
+}
+
+td:hover:after {
+	position:absolute;
+	display:block;
+	content:'\a0';
+	z-index:2;
+	top:-3px;
+	right:-3px;
+	bottom:-3px;
+	left:-3px;
+	border-radius:3px;
+	border:2px solid red;
+	color:red;
 }
 
 
@@ -142,7 +169,8 @@ td {
 	left:0;
 }
 
-.mat-cols tbody {
+.mat-cols tbody,
+.mat-rows td {
 	visibility:hidden;
 }
 
