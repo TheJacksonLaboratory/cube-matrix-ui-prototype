@@ -10,10 +10,18 @@ let getRandomData = (cl, rl) => {
 	return data;
 };
 
+let getMinArray = (a) => {
+	return a.reduce((n1, n2) => { return Math.min(n1, n2); });
+};
+
+let getMaxArray = (a) => {
+	return a.reduce((n1, n2) => { return Math.max(n1, n2); });
+};
+
 let getMax = (data) => {	
-	return data.reduce((n, a) => {
-		let ma = a.reduce((c1, c2) => { return Math.max(c1, c2); });
-	    return Math.max(n, ma);
+	return data.reduce((n, row) => {
+		let rowMax = getMaxArray(row);
+	    return Math.max(n, rowMax);
 	}, 0);
 };
 
@@ -26,7 +34,10 @@ let mat = (o) => {
 		$colHead = $m.find('.mat-cols > thead > tr'),
 		$colBody = $m.find('.mat-cols > tbody > tr'),
 		$rowHead = $m.find('.mat-rows > tbody'),
-		nextTimeout = null;
+		nextTimeout = null,
+		isSelecting = false,
+		selected = {},
+		c0, r0;
 		
 	let init = (md, $t) => {
 		
@@ -73,26 +84,118 @@ let mat = (o) => {
 		}
 	};
 	
-	let initHandlers = () => {
-		$matData.find('td').hover(
-			(e) => {
+	let clearSelected = (e) => {
+		$matData.find('th,td').removeClass('selected c0 c1 r0 r1');
+	};	
+	
+	let updateSelectedRange = (e) => {		
+		if (isSelecting) {			
+			let $td = $(e.target),
+				cn = $td.index(),
+				rn = $td.closest('tr').index(),
+				c1 = Math.min(c0, cn),
+				c2 = Math.max(c0, cn),
+				r1 = Math.min(r0, rn),
+				r2 = Math.max(r0, rn);
 				
-				
-				// console.log($(e.target).index());
-				
-				
-				$matData.find('thead th:nth-child(' + ($(e.target).index() + 1) + ')').addClass('hovering');	
-			},
-			(e) => {
-				$matData.find('thead th:nth-child(' + ($(e.target).index() + 1) + ')').removeClass('hovering');
+			selected.cols = [];
+			selected.rows = [];
+
+			for (let ri = r1; ri <= r2; ri += 1) {
+				selected.rows.push(ri);
 			}
-				
-			
-			);		
+			for (let ci = c1; ci <= c2; ci += 1) {
+				selected.cols.push(ci);
+			}
+			// console.log(selected);
+
+			updateSelected();
+		}
+	};	
+	
+	let updateSelected = () => {		
+		clearSelected();
+		for (let ri in selected.rows) {
+			let rn = selected.rows[ri] + 1,
+				rcl = 'selected';
+			if (rn === getMinArray(selected.rows) + 1) { rcl += ' r0'; }
+			if (rn === getMaxArray(selected.rows) + 1) { rcl += ' r1'; }
+			let $ri = $matData.find('tbody tr:nth-child(' + rn + ')');
+			$matData.find('tbody > tr:nth-child(' + rn + ') > th').addClass('selected');
+			for (let ci in selected.cols) {
+				let cn = selected.cols[ci] + 1,
+					ccl = rcl;
+				if (cn === getMinArray(selected.cols) + 1) { ccl += ' c0'; }
+				if (cn === getMaxArray(selected.cols) + 1) { ccl += ' c1'; }
+				$ri.find('td:nth-child(' + cn + ')').addClass(ccl);
+				$matData.find('thead th:nth-child(' + cn + ')').addClass('selected');
+			}
+		}
+	};	
+
+	let initHandlers = () => {
+		let $tds = $matData.find('td'),
+			$rhs = $matData.find('tbody th');
 		
+		$tds.on('mouseenter', (e) => {
+			updateSelectedRange(e);
+			$matData.find('thead th:nth-child(' + ($(e.target).index() + 1) + ')').addClass('hovering');	
+		});
+			
+		$tds.on('mouseleave', (e) => {
+			$matData.find('thead th:nth-child(' + ($(e.target).index() + 1) + ')').removeClass('hovering');
+		});
+		
+		$matData.find('thead th').on('click', (e) => {			
+			let $th = $(e.target).closest('th'),
+				cn = $th.index(),
+				ci = selected.cols.indexOf(cn);
+				
+			if (ci !== -1) {
+				selected.cols.splice(ci, 1);				
+			} else {
+				selected.cols.push(cn);
+			}
+			updateSelected();			
+		});
+		
+		$matData.find('tbody th').on('click', (e) => {
+			let $tr = $(e.target).closest('tr'),
+				rn = $tr.index(),
+				ri = selected.rows.indexOf(rn);
+			
+			if (ri !== -1) {
+				selected.rows.splice(ri, 1);				
+			} else {
+				selected.rows.push(rn);
+			}
+			updateSelected();				
+		});
+		
+		
+		
+		$tds.on('mousedown', (e) => {
+			e.preventDefault();		
+			let $td = $(e.target);			
+			isSelecting = true;
+			c0 = $td.index();
+			r0 = $td.closest('tr').index();
+		});
+		
+		$matData.on('mouseup mouseleave', (e) => {			
+			if (isSelecting) {				
+				updateSelectedRange(e);
+				isSelecting = false;
+				if (getMinArray(selected.cols) === getMaxArray(selected.cols) && getMinArray(selected.rows) === getMaxArray(selected.rows)) {
+					clearSelected();
+				}
+			}
+		});
 	};
 	
 	let updateWithNext = (ms) => {
+		isSelecting = false;
+		clearSelected();
 		if (nextTimeout !== null) {
 			window.clearTimeout(nextTimeout);
 			nextTimeout = null;
@@ -134,10 +237,7 @@ $(function() {
 	
 	$('#test-1').on('click', () => { m.setRows('assay'); });
 	$('#test-2').on('click', () => { m.setRows('genotype'); });
-	$('#test-3').on('click', () => { m.setCols('sample'); });
-		
-
-	
+	$('#test-3').on('click', () => { m.setCols('sample'); });	
 
 });
 

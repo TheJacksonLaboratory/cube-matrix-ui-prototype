@@ -80,9 +80,12 @@ tbody th {
 
 
 
-th, td {
+th,
+td,
+thead > tr > th > b {
 	box-sizing:border-box;
 	-webkit-user-select:none;
+	cursor:default;
 }
 
 thead > tr > th > b,
@@ -142,23 +145,54 @@ td {
 
 thead th:hover,
 thead th.hovering,
-tbody > tr:hover th {
+tbody > tr:hover th,
+th.selected {
 	color:red;
 }
 
-td:hover:after {
+td:hover:after,
+td.selected:before {
 	position:absolute;
 	display:block;
 	content:'\a0';
-	z-index:2;
+	z-index:1;
 	top:-3px;
 	right:-3px;
 	bottom:-3px;
-	left:-3px;
+	left:-3px;	
+}
+
+td:hover:after {
+	z-index:2;
 	border-radius:3px;
 	border:2px solid red;
 	color:red;
 }
+
+td.selected:before {
+	z-index:1;
+	border-radius:3px;
+	border:2px solid transparent;
+	background-clip:padding-box;
+}
+
+td.c0:before {
+	border-left:2px solid red;
+}
+
+td.c1:before {
+	border-right:2px solid red;
+}
+
+td.r0:before {
+	border-top:2px solid red;
+}
+
+td.r1:before {
+	border-bottom:2px solid red;
+}
+
+
 
 
 .mat-cols,
@@ -239,6 +273,18 @@ td:hover:after {
 .m-7 { background-color:rgba(0,158,208,0.8); }
 .m-8 { background-color:rgba(0,158,208,0.9); }
 .m-9 { background-color:rgba(0,158,208,1.0); }
+
+
+.selected.m-0 { background-color:rgba(208,0,0,0.55); }
+.selected.m-1 { background-color:rgba(208,0,0,0.6); }
+.selected.m-2 { background-color:rgba(208,0,0,0.65); }
+.selected.m-3 { background-color:rgba(208,0,0,0.7); }
+.selected.m-4 { background-color:rgba(208,0,0,0.75); }
+.selected.m-5 { background-color:rgba(208,0,0,0.8); }
+.selected.m-6 { background-color:rgba(208,0,0,0.85); }
+.selected.m-7 { background-color:rgba(208,0,0,0.9); }
+.selected.m-8 { background-color:rgba(208,0,0,0.95); }
+.selected.m-9 { background-color:rgba(208,0,0,1.0); }
 
 
 
