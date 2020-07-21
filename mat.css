@@ -9,7 +9,7 @@ body {
 	margin:0;
 	padding:50px;
 	background-color:#222;
-	height:400vh;
+	/* height:100vh; */
 	color:white;
 }
 
@@ -46,13 +46,12 @@ body {
 
 .mat {
 	perspective:270rem;
-	perspective-origin:8rem 8rem;
+	perspective-origin:14rem 14rem;
 	position:relative;
 }
 
 table {
 	border-collapse:collapse;
-
 }
 
 .rot,
@@ -63,10 +62,16 @@ tbody th {
 	animation-fill-mode: forwards;
 }
 
+/* .mat caption {
+	box-sizing:border-box;
+	height:30px;
+	background-color:red;
+} */
+
 .rot {
 	position:relative;
 	transform-style:preserve-3d;
-	transform-origin:8rem 8rem;	
+	transform-origin:14rem 14rem;	
 }
 
 .mat-next {
@@ -75,7 +80,7 @@ tbody th {
 	left:0;
 	display:none;
 	transform-style:preserve-3d;
-	transform-origin:8rem 8rem;	
+	transform-origin:14rem 14rem;	
 }
 
 
@@ -88,22 +93,6 @@ thead > tr > th > b {
 	cursor:default;
 }
 
-thead > tr > th > b,
-tbody th, 
-td {
-	height:3rem;
-}
-
-thead > tr > th, td {
-	width:3rem;
-}
-
-tbody th,
-thead > tr > th > b,
-thead > tr > th:first-child {
-	width:8rem;
-}
-
 thead > tr > th {
 	border-left:1px solid transparent;
 	border-right:1px solid transparent;
@@ -112,8 +101,36 @@ thead > tr > th {
 	position:relative;
 }
 
+thead > tr:first-child > th,
+thead > tr:nth-child(2) > th,
+thead > tr > th > b,
+tbody th > b,
+tbody th.rh, 
+td {
+	height:3rem;
+}
+
+thead > tr > th, td {
+	width:3rem;
+}
+
+tbody th.rh,
+thead > tr > th > b,
+tbody th > b,
+thead > tr > th.rh {
+	width:8rem;
+}
+
+
+
 thead > tr > th:first-child {
 	border:0;
+}
+
+
+thead > tr:first-child > th,
+tbody th.rt {
+	font-size:1.5rem;
 }
 
 thead > tr > th > b {
@@ -135,6 +152,39 @@ tbody th {
 	padding-right:0.75rem;
 }
 
+tbody th.rt,
+tbody th.rg {
+	position:relative;
+	text-align:center;
+}
+
+/* tbody th.rg {
+	border-top:1px solid #777;
+	border-bottom:1px solid #777;
+} */
+
+.g0 > th.rh {
+	border-top:1px solid #777;
+}
+
+.g1 > th.rh {
+	border-bottom:1px solid #777;
+}
+
+tbody th > b {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	position:absolute;
+	margin-left:-4rem;
+	margin-top:-1.5rem;
+	top:50%;
+	left:50%;
+	transform:rotate(-90deg);
+	transform-origin:center center;
+	text-align:center;
+}
+
 td {
 	position:relative;
 	text-align:center;
@@ -143,9 +193,9 @@ td {
 }
 
 
-thead th:hover,
+thead > tr:nth-child(3) > th:hover,
 thead th.hovering,
-tbody > tr:hover th,
+tbody > tr:hover > th.rh,
 th.selected {
 	color:rgb(255,191,0);
 }
@@ -198,13 +248,14 @@ td.r1:before {
 .mat-cols,
 .mat-rows {
 	position:absolute;
-	display:none;
 	top:0;
 	left:0;
 }
 
 .mat-cols tbody,
-.mat-rows td {
+.mat-cols thead,
+.mat-rows td,
+.mat-rows th {
 	visibility:hidden;
 }
 
@@ -222,8 +273,8 @@ td.r1:before {
 	display:table;
 }
 
-.rot-y .mat-rows {
-	display:table;
+.rot-y .mat-rows th {
+	visibility:visible;
 }
 
 .rot-y .mat-next tbody th ,
@@ -247,8 +298,8 @@ td.r1:before {
 	display:table;
 }
 
-.rot-x .mat-cols {
-	display:table;
+.rot-x .mat-cols thead {
+	visibility:visible;
 }
 
 .rot-x .mat-next thead,
@@ -259,6 +310,31 @@ td.r1:before {
 .rot-x .mat-next tbody th {
 	animation-name:fadein;
 }
+
+
+
+
+
+/* Controls */
+
+
+.control {
+	position:absolute;
+}
+
+.control select {
+	width:80px;
+	box-sizing:border-box;
+}
+
+.control-x {
+	top:0;
+	right:0;
+}
+
+
+
+
 
 
 

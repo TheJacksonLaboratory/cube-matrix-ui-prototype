@@ -52,9 +52,9 @@ const dims = {
 	genotype: {
 		n: 'Genotype',
 		g: [
-			{ n: 'Founder Inbred Strains', l: 8 },
-			{ n: 'Collaborative Crosses', l: 20 },
-			{ n: 'Diversity Outbred', l: 7 }
+			{ n: 'Founder Inbred Strains', l: 6 }, // 8
+			{ n: 'Collaborative Crosses', l: 7 }, // 20
+			{ n: 'Diversity Outbred', l: 2 } // 7
 		],
 		d: [
 			'A/J',
