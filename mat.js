@@ -39,6 +39,16 @@ let mat = (o) => {
 		selected = {},
 		c0, r0;
 		
+		
+	let clearSelected = () => {
+		selected.cols = [];
+		selected.rows = [];		
+	};
+	
+	let clearSelectedDisplay = () => {
+		$matData.find('th,td').removeClass('selected c0 c1 r0 r1');
+	};		
+			
 	let init = (md, $t) => {
 		
 		let $h = $t.find('thead > tr'),
@@ -82,24 +92,22 @@ let mat = (o) => {
 
 			}
 		}
+		m.md = md;
+		m.md.data = data;
+		clearSelected();
 	};
-	
-	let clearSelected = (e) => {
-		$matData.find('th,td').removeClass('selected c0 c1 r0 r1');
-	};	
-	
+
 	let updateSelectedRange = (e) => {		
 		if (isSelecting) {			
 			let $td = $(e.target),
-				cn = $td.index(),
-				rn = $td.closest('tr').index(),
-				c1 = Math.min(c0, cn),
-				c2 = Math.max(c0, cn),
-				r1 = Math.min(r0, rn),
-				r2 = Math.max(r0, rn);
+				ce = $td.index() - 1,
+				re = $td.closest('tr').index(),
+				c1 = Math.min(c0, ce),
+				c2 = Math.max(c0, ce),
+				r1 = Math.min(r0, re),
+				r2 = Math.max(r0, re);
 				
-			selected.cols = [];
-			selected.rows = [];
+			clearSelected();
 
 			for (let ri = r1; ri <= r2; ri += 1) {
 				selected.rows.push(ri);
@@ -107,14 +115,12 @@ let mat = (o) => {
 			for (let ci = c1; ci <= c2; ci += 1) {
 				selected.cols.push(ci);
 			}
-			// console.log(selected);
-
-			updateSelected();
+			updateSelectedDisplay();
 		}
 	};	
 	
-	let updateSelected = () => {		
-		clearSelected();
+	let updateSelectedDisplay = () => {		
+		clearSelectedDisplay();
 		for (let ri in selected.rows) {
 			let rn = selected.rows[ri] + 1,
 				rcl = 'selected';
@@ -123,10 +129,10 @@ let mat = (o) => {
 			let $ri = $matData.find('tbody tr:nth-child(' + rn + ')');
 			$matData.find('tbody > tr:nth-child(' + rn + ') > th').addClass('selected');
 			for (let ci in selected.cols) {
-				let cn = selected.cols[ci] + 1,
+				let cn = selected.cols[ci] + 2,
 					ccl = rcl;
-				if (cn === getMinArray(selected.cols) + 1) { ccl += ' c0'; }
-				if (cn === getMaxArray(selected.cols) + 1) { ccl += ' c1'; }
+				if (cn === getMinArray(selected.cols) + 2) { ccl += ' c0'; }
+				if (cn === getMaxArray(selected.cols) + 2) { ccl += ' c1'; }
 				$ri.find('td:nth-child(' + cn + ')').addClass(ccl);
 				$matData.find('thead th:nth-child(' + cn + ')').addClass('selected');
 			}
@@ -148,37 +154,47 @@ let mat = (o) => {
 		
 		$matData.find('thead th').on('click', (e) => {			
 			let $th = $(e.target).closest('th'),
-				cn = $th.index(),
-				ci = selected.cols.indexOf(cn);
+				ci = $th.index() - 1,
+				si = selected.cols.indexOf(ci);
 				
-			if (ci !== -1) {
-				selected.cols.splice(ci, 1);				
+			if (si !== -1) {
+				selected.cols.splice(si, 1);				
 			} else {
-				selected.cols.push(cn);
+				if (selected.rows === undefined || selected.rows.length === 0 ) {
+					selected.rows = [];
+					for (let ri = 0; ri < m.md.data.length; ri += 1) {
+						selected.rows.push(ri);
+					}
+				}
+				selected.cols.push(ci);
 			}
-			updateSelected();			
+			updateSelectedDisplay();			
 		});
 		
 		$matData.find('tbody th').on('click', (e) => {
 			let $tr = $(e.target).closest('tr'),
-				rn = $tr.index(),
-				ri = selected.rows.indexOf(rn);
+				ri = $tr.index(),
+				si = selected.rows.indexOf(ri);
 			
-			if (ri !== -1) {
-				selected.rows.splice(ri, 1);				
+			if (si !== -1) {
+				selected.rows.splice(si, 1);				
 			} else {
-				selected.rows.push(rn);
+				if (selected.cols === undefined || selected.cols.length === 0 ) {
+					selected.cols = [];
+					for (let ci = 0; ci < m.md.data[0].length; ci += 1) {
+						selected.cols.push(ci);
+					}
+				}								
+				selected.rows.push(ri);
 			}
-			updateSelected();				
+			updateSelectedDisplay();				
 		});
-		
-		
 		
 		$tds.on('mousedown', (e) => {
 			e.preventDefault();		
 			let $td = $(e.target);			
 			isSelecting = true;
-			c0 = $td.index();
+			c0 = $td.index() - 1;
 			r0 = $td.closest('tr').index();
 		});
 		
@@ -188,6 +204,7 @@ let mat = (o) => {
 				isSelecting = false;
 				if (getMinArray(selected.cols) === getMaxArray(selected.cols) && getMinArray(selected.rows) === getMaxArray(selected.rows)) {
 					clearSelected();
+					clearSelectedDisplay();
 				}
 			}
 		});
@@ -195,7 +212,7 @@ let mat = (o) => {
 	
 	let updateWithNext = (ms) => {
 		isSelecting = false;
-		clearSelected();
+		clearSelectedDisplay();
 		if (nextTimeout !== null) {
 			window.clearTimeout(nextTimeout);
 			nextTimeout = null;
