@@ -62,12 +62,6 @@ tbody th {
 	animation-fill-mode: forwards;
 }
 
-/* .mat caption {
-	box-sizing:border-box;
-	height:30px;
-	background-color:red;
-} */
-
 .rot {
 	position:relative;
 	transform-style:preserve-3d;
@@ -133,6 +127,12 @@ tbody th.rt {
 	font-size:1.5rem;
 }
 
+thead > tr:nth-child(2) > th,
+tbody th.rg {
+	color:rgba(255,255,255,0.5);
+}
+
+
 thead > tr > th > b {
 	display:flex; 
 	justify-content:flex-start;
@@ -158,11 +158,6 @@ tbody th.rg {
 	text-align:center;
 }
 
-/* tbody th.rg {
-	border-top:1px solid #777;
-	border-bottom:1px solid #777;
-} */
-
 .g0 > th.rh {
 	border-top:1px solid #777;
 }
@@ -170,6 +165,8 @@ tbody th.rg {
 .g1 > th.rh {
 	border-bottom:1px solid #777;
 }
+
+
 
 tbody th > b {
 	display:flex;
@@ -241,6 +238,24 @@ td.r0:before {
 td.r1:before {
 	border-bottom:2px solid rgb(255,191,0);
 }
+
+
+
+
+
+td > div.show-z {
+	position:absolute;
+	top:0;
+	left:0;
+	width:3em;
+	height:3em;
+	z-index:2;
+	background-color:red;
+}
+
+
+
+
 
 
 
